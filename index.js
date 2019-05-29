@@ -36,4 +36,66 @@ db.serialize(function(){
     db.run("INSERT INTO Teaches VALUES(83821, 'CS-319', '1', 'Spring', 2010)");
     db.run("INSERT INTO Teaches VALUES(98345, 'EE-181', '1', 'Spring', 2009)");
 
+    //Match Teaches and Instructor with the same ID
+    // Print Name and course id
+
+    /* db.each("SELECT Instructor.Name, Teaches.Course_id AS Course FROM Instructor INNER JOIN \ Teaches ON Teaches.ID = Instructor.ID", function(err,row){
+        if(err)
+            console.log(err);
+        console.log(row);
+     });
+ */
+/*      db.each("SELECT Instructor.Name, Teaches.Course_id FROM Instructor, Teaches \ WHERE Teaches.ID = Instructor.ID", function(err,row){
+         if(err)
+            console.log(err);
+        console.log(row);
+    }); */
+
+/*     db.each("SELECT * FROM Instructor NATURAL JOIN Teaches", function(err,row){
+        if(err)
+            console.log(err);
+        console.log(row);
+    }); */
+
+    db.run("CREATE TABLE Student (ID NUMBER, Name TEXT, Dept_name TEXT, Tot_cred NUMBER)");
+
+    db.run("INSERT INTO Student VALUES(00128, 'Zhang', 'Comp. Sci.', 102)");
+    db.run("INSERT INTO Student VALUES(00128, 'Snow', 'Physics', 0)");
+
+    db.run("CREATE TABLE Takes (ID NUMBER, Course_id TEXT, Sec_id NUMBER, Semester TEXT, Year NUMBER, Grade TEXT)");
+
+    db.run("INSERT INTO Takes VALUES(00128, 'CS-101', 1, 'Fall', 2009, 'A')");
+    db.run("INSERT INTO Takes VALUES(00128, 'CS-347', 1, 'Fall', 2009, 'A-')");
+
+    //Display all the courses a student has taken
+
+/*     db.all("SELECT * FROM Student, Takes WHERE Student.ID = Takes.ID", function(err,row){
+        if(err)
+            console.log(err)
+        console.log(row);
+    }); */
+
+    //Display all students and the courses  they've taken
+    //Student name and course name
+
+/*     db.all("SELECT Student.Name, Takes.Course_id FROM Student \ NATURAL LEFT OUTER JOIN Takes",function(err,row){
+        if(err)
+            console.log(err);
+        console.log(row);
+    }); */
+
+    //Display all students and the courses they've taken using views
+    //Student name and course name semester
+    //Let's use a view that included all of the attributes
+
+    db.run("CREATE VIEW studentCourses AS \ SELECT * FROM Student \ NATURAL LEFT OUTER JOIN Takes");
+
+    db.each("SELECT * FROM studentCourses", function(err,row){
+        //console.log(row);
+    });
+
+    db.each("SELECT studentCourses.Name, studentCourses.Course_id FROM studentCourses",function(err,row){
+        console.log(row);
+    });
+
 });
